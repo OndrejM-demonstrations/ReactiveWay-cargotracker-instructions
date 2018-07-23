@@ -4,13 +4,7 @@ In this part, we will deploy the monolith and the microservice as connected dock
 
 === Build Docker Image of Payara Server with additional configuration
 
-We need to enable Hazelcast in Payara Server, therefore we'll build a custom Payara Server image. The instructions to use the stock `payara/server-full` image and its Dockerfile can be found in the https://hub.docker.com/r/payara/server-full/[Docker Hub].
-
 To see the example, checkout the branch `13_deploy_to_docker_01_simple` in both repositories.
-
-Go into the `cargo-tracker/docker` directory and run the following command:
-
-`docker build -t reactivems/payara-server .`
 
 === Running the main application in Docker
 

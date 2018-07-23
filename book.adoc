@@ -1,5 +1,5 @@
-= Instructions for HOL1320: A Step-by-Step Guide from Traditional Java EE to Reactive Microservice Design
-:description:Instructions for JavaOne Hands-On-Lab HOL1320
+= A Step-by-Step Guide from Traditional Java EE to Reactive Microservice Design
+:description:Instructions for a workshop
 :author: Ondrej Mihalyi
 :doctype: article
 :encoding: utf-8
