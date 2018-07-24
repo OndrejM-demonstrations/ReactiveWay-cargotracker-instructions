@@ -32,9 +32,9 @@ There are 2 new maven modules:
 
  1. run `mvn clean install` in the root of this repository (for the top-level maven module)
  2. deploy the monolithic cargo-tracker application to Payara Server as before
- 3. run Pathfinder micro service with Payara Micro -- go to the directory `pathfinder/target` and execute: `java -jar payara-micro.jar --clustermode domain --autobindhttp pathfinder.war` (alternatively use the https://docs.payara.fish/documentation/ecosystem/maven-plugin.html[Payara Micro maven plugin])
+ 3. run Pathfinder micro service with Payara Micro - go to the directory `pathfinder/target` and execute: `java -jar payara-micro.jar -clustermode domain -autobindhttp pathfinder.war` (alternatively use the https://docs.payara.fish/documentation/ecosystem/maven-plugin.html[Payara Micro maven plugin])
 
-The `--autobindhttp` argument to Payara Micro instructs the service to bind the HTTP listener to an available port. Since the monolithic application already occupies the port 8080, therefore the Pathfinder service will probably bind to the port 8081. We can find out the port from the console output. We can check that the application is running with the following URL: http://localhost:8081/pathfinder/rest/graph-traversal/shortest-path?origin=CNHKG&destination=AUMEL
+The `-autobindhttp` argument to Payara Micro instructs the service to bind the HTTP listener to an available port. Since the monolithic application already occupies the port 8080, therefore the Pathfinder service will probably bind to the port 8081. We can find out the port from the console output. We can check that the application is running with the following URL: http://localhost:8081/pathfinder/rest/graph-traversal/shortest-path?origin=CNHKG&destination=AUMEL
 
 The port number is not important and can even vary. The monolith communicates with the service using the CDI even bus messages and doesn't use the REST endpoint. 
 
@@ -58,13 +58,13 @@ Deploy and run the main application in a usual way on Payara Server.
 
 Run the Pathfinder microservice with Payara Micro:
 
-`java -jar payara-micro.jar --deploy pathfinder.war --autobindhttp`
+`java -jar payara-micro.jar -deploy pathfinder.war -autobindhttp`
 
 Try if the route cargo page is working, check the logs of the main application and the Pathfinder service.
 
 Build a standalone executable JAR with the Pathfinder microservice:
 
-`java -jar payara-micro.jar --deploy pathfinder.war --autobindhttp --outputuberjar pathfinder-standalone.jar`
+`java -jar payara-micro.jar -deploy pathfinder.war -autobindhttp -outputuberjar pathfinder-standalone.jar`
 
 Run a second instance of the Pathfinder microservice, now using the standalone JAR:
 

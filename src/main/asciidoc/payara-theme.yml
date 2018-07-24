@@ -11,3 +11,5 @@ footer:
     right: 'Payara {section-or-chapter-title} | {page-number}'
   verso_content:
     left: '{page-number} | {chapter-title}'
+base:
+  font_family: Times-Roman

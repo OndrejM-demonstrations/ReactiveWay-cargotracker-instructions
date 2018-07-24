@@ -36,7 +36,7 @@ This project is an example of how our Work project should finally look like.
 
 The project consists of 2 git repositories:
 
- - https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker[ReactiveWay-cargotracker] -- updates to the original CargoTracker application
- - https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker-ext[ReactiveWay-cargotracker extensions] -- additional modules required by the updated CargoTracker application, and information about all the changes and how to run the application
+ - https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker[ReactiveWay-cargotracker] - updates to the original CargoTracker application
+ - https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker-ext[ReactiveWay-cargotracker extensions] - additional modules required by the updated CargoTracker application, and information about all the changes and how to run the application
  
 The project's git repositories contain a branch for every step of this lab. 

@@ -15,7 +15,7 @@ Rebuild the cargo-tracker main application with `mvn install`.
 Run the application inside Docker with the following command, with PATH_TO_THE_GITHUB_REPO substituted by the path to parent folder of the cargo-tracker project:
 
 ```
-docker run -p 8080:8080 -p 4900:4900 -v 'PATH_TO_THE_GITHUB_REPO/cargo-tracker/target/autodeploy':/opt/payara41/deployments payara/server-full
+docker run -p 8080:8080 -v 'PATH_TO_THE_GITHUB_REPO/cargo-tracker/target/autodeploy':/opt/payara/deployments payara/server-full
 ```
 
 Test that the application is running at the URL: http://localhost:8080/cargo-tracker/[localhost:8080/cargo-tracker]
@@ -24,25 +24,25 @@ If the application isn't running, try building the application again to deploy i
 
 === Running the Pathfinder service in Docker
 
-Run the application inside Docker with the following command, with PATH_TO_THE_GITHUB_REPO substituted by the path to parent folder of the pathfinder project:
+Run the application inside Docker with the following command, with PATH_TO_THE_GITHUB_REPO substituted by the path to parent folder of the pathfinder project (Note: It's not necessary to map the HTTP port because the application doesn't use it):
 
 ```
-docker run -p 8081:8080 -p 4901:4900 -v 'PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/payara/deployments payara/micro java -jar /opt/payara/payara-micro.jar --deploy /opt/payara/deployments/pathfinder.war --clustermode domain:172.17.0.2:4900
+docker run -v 'PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/payara/deployments payara/micro java -jar /opt/payara/payara-micro.jar -deploy /opt/payara/deployments/pathfinder.war -clustermode domain:172.17.0.2:4900
 ```
 
 Test that the service is running and exposes a REST resource at the URL: http://localhost:8081/pathfinder/rest/graph-traversal/shortest-path?origin=CNHKG&destination=AUMEL
 
 ==== Explanation
 
-Payara Micro service can form a cluster together with Payara Server. We need to use `--clustermode` argument to instruct Payara Micro where to find the Payara Server Domain Server which we started in the previous step. You need to supply the IP of the network interface inside the docker container, which you can find out using one of the following ways:
+Payara Micro service can form a cluster together with Payara Server. We need to use `-clustermode` argument to instruct Payara Micro where to find the Payara Server Domain Server which we started in the previous step. You need to supply the IP of the network interface inside the docker container, which you can find out using one of the following ways:
 
 * execute `docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' PAYARA_SERVER_CONTAINER_ID` - supply the container ID of the running Payara Server container you started in the previous step
 * attach to the running Payara Server container with `docker exec -it PAYARA_SERVER_CONTAINER_ID /bin/sh`, execute `ip addr show eth0` and fing the IP address that follows `inet`
 
 === Running multiple Pathfinder services in Docker
 
-Run additional services with the same docker command, but with modified port mapping. It's not necessary to map the HTTP port:
+Run additional services with the same docker command:
 
 ```
-docker run -v 'PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/payara/deployments payara/micro java -jar /opt/payara/payara-micro.jar --deploy /opt/payara/deployments/pathfinder.war
+docker run -v 'PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/payara/deployments payara/micro java -jar /opt/payara/payara-micro.jar -deploy /opt/payara/deployments/pathfinder.war -clustermode domain:172.17.0.2:4900
 ```
