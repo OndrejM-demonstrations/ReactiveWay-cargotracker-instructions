@@ -27,7 +27,7 @@ If the application isn't running, try building the application again to deploy i
 Run the application inside Docker with the following command, with PATH_TO_THE_GITHUB_REPO substituted by the path to parent folder of the pathfinder project (Note: It's not necessary to map the HTTP port because the application doesn't use it):
 
 ```
-docker run -v 'PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/payara/deployments payara/micro -deploy /opt/payara/deployments/pathfinder.war -clustermode domain:172.17.0.2:4900
+docker run -v 'PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/payara/deployments payara/micro --deploy /opt/payara/deployments/pathfinder.war --clustermode domain:172.17.0.2:4900
 ```
 
 Test that the service is running and exposes a REST resource at the URL: http://localhost:8081/pathfinder/rest/graph-traversal/shortest-path?origin=CNHKG&destination=AUMEL
@@ -44,5 +44,5 @@ Payara Micro service can form a cluster together with Payara Server. We need to 
 Run additional services with the same docker command:
 
 ```
-docker run -v 'PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/payara/deployments payara/micro -deploy /opt/payara/deployments/pathfinder.war -clustermode domain:172.17.0.2:4900
+docker run -v 'PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/payara/deployments payara/micro --deploy /opt/payara/deployments/pathfinder.war --clustermode domain:172.17.0.2:4900
 ```

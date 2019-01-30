@@ -1,20 +1,17 @@
 == Running the Work Project
 
-To run the demo from the above branches, you need to install http://www.payara.fish/downloads[Payara Server version 5.181] or newer and a standalone Derby database, which is available either in the Payara Server distribution or in a JDK installation. 
+To run the demo from the above branches, you need to install http://www.payara.fish/downloads[Payara Server version 5.181] or newer. 
 
 Deploy the application:
 
-1. Start Derby DB on localhost and the default port 1527 (if using Derby DB in Payara Server, execute `javadb/bin/startNetworkServer` or run the DB from Netbeans)
-2. Start Payara Server with the default configuration `domain1` (either from Netbeans or from command line run `bin/asadmin start-domain -v`)
-3. Deploy the application with context root `cargo-tracker` (either build & run the project from Netbeans and select Payara Server to deploy, or run from command line `</path/to/payara>/bin/asadmin deploy -force=true -contextroot cargo-tracker target/cargo-tracker.war`)
-4. Verify that the application is running by opening the URL http://localhost:8080/cargo-tracker/ in the browser.
+1. Start Payara Server with the default configuration `domain1` (either from Netbeans or from command line run `bin/asadmin start-domain -v`)
+2. Deploy the application with context root `cargo-tracker` (either build & run the project from Netbeans and select Payara Server to deploy, or run from command line `</path/to/payara>/bin/asadmin deploy -force=true -contextroot cargo-tracker target/cargo-tracker.war`)
+3. Verify that the application is running by opening the URL http://localhost:8080/cargo-tracker/ in the browser.
 
-NOTE: You may also verify that Payara Server console is available and the Cargo Tracker application is deployed - http://localhost:4848.
+NOTE: You may also verify that Payara Server console is available at http://localhost:4848 and that the Cargo Tracker application is among deployed applications.
 
-Navigate to the "routing" page we focus on:
+In the application, navigate to the "routing" page we focus on:
 
 1. Select *Administration interface*
 2. Select a record in the "Not routed" table
 3. The routing page opens with suggested routes
-
-If you have troubles running the application, make sure that the Derby database is running and restart the application.

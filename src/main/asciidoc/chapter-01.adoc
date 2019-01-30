@@ -4,7 +4,7 @@ In this session, presenters and attendees explore together how to migrate parts 
 
 === Resources
 
-All the tools and resources you'll need are preinstalled in this virtual machine.
+All the tools and resources you'll need are preinstalled in this virtual machine. If you don't use a virtual machine image, most of the resources are available in a folder distributed over internet or a USB stick (except docker and maven, which need to be installed before the lecture).
 
 In the directory `workspace` (`/home/javaone/workspace`), accessible from the desktop shortcut:
  
