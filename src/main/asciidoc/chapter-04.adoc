@@ -21,7 +21,7 @@ Because the communication already goes through the CDI event bus, we don't need 
 
 === 2. Run the microservice architecture
 
-Start with the branch `11_separate_microservice` in both repositories.
+Start with the branch `11_jee8_separate_microservice` in both repositories.
 
 There are 2 new maven modules:
 
@@ -49,7 +49,7 @@ JCache can be used for caching of results to optimize repetitive processing. But
 * Inject `javax.cache.Cache<Long, String>` into `GraphTraversalResource`, give it a name with `@NamedCache`
 * 
 
-The branch `12_load_balancing_01_jcache` contains complete solution. 
+The branch `12_jee8_load_balancing_01_jcache` contains complete solution. 
 
 
 === Run the microservices
@@ -58,16 +58,16 @@ Deploy and run the main application in a usual way on Payara Server.
 
 Run the Pathfinder microservice with Payara Micro:
 
-`java -jar payara-micro.jar -deploy pathfinder.war -autobindhttp`
+`java -jar target/payara-micro.jar -deploy target/pathfinder.war -autobindhttp`
 
 Try if the route cargo page is working, check the logs of the main application and the Pathfinder service.
 
-Build a standalone executable JAR with the Pathfinder microservice:
+Run a second instance of the Pathfinder microservice, now using the standalone JAR built by Payara maven plugin:
 
-`java -jar payara-micro.jar -deploy pathfinder.war -autobindhttp -outputuberjar pathfinder-standalone.jar`
+`java -jar pathfinder-uber.jar`
 
-Run a second instance of the Pathfinder microservice, now using the standalone JAR:
+Request the route cargo page and watch the log files of both pathfinder services. On of them will log "Received a computation request", which means it will compute and provide the results. Another one will log "Ignoring computation request", which means it detected a computation started in the first instance and ignores the request. 
 
-`java -jar pathfinder-standalone.jar`
+If you load the page several times, you'll see that the computation is balanced and switches randomly between the 2 instances.
 
-Request the route cargo page in 2 or more different windows at the same time and observe that the requests are load-balanced to one or the other Pathfinder instance.
+If you stop any of the pathfinder services and load the route cargo page again you'll see that the application still works. The computation is performed on the running pathfinder service. You can start another pathfinder service and stop the former and the page will still load without any problem.

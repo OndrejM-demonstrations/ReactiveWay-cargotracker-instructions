@@ -40,3 +40,15 @@ The project consists of 2 git repositories:
  - https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker-ext[ReactiveWay-cargotracker extensions] - additional modules required by the updated CargoTracker application, and information about all the changes and how to run the application
  
 The project's git repositories contain a branch for every step of this lab. 
+
+To clone both repositories, run the following git clone command (with the `--recurse-submodules` argument):
+
+```
+git clone --recurse-submodules https://github.com/OndrejM-demonstrations/ReactiveWay-cargotracker-ext.git
+```
+
+To switch between branches, run the following git checkout command (with the `--recurse-submodules` argument):
+
+git checkout --recurse-submodules BRANCH
+
+Note that this will create a detached HEAD on the cargo-tracker submodule. If you want to commit your changes, it's better to go to the `cargo-tracker` directory and check out a specific branch or create a new one.

@@ -1,0 +1,5 @@
+= A step-by-step guide to reactive microservice design
+
+In this workshop, presenters and attendees explore together how to migrate parts of an existing Java EE application step-by-step in order to decrease its response time, increase throughput, and make it more flexible and robust. The instructions and code show you by example how to apply reactive design to a traditional codebase, split it into several microservices, and deploy them to a cloud environment. Finally it evaluates the performance and flexibility gains.
+
+Continue with the instructions: link:src/main/asciidoc/book.adoc[Instructions]

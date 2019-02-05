@@ -4,19 +4,26 @@ In this part, we will deploy the monolith and the microservice as connected dock
 
 === Build Docker Image of Payara Server with additional configuration
 
-To see the example, checkout the branch `13_deploy_to_docker_01_simple` in both repositories.
+To see the example, checkout the branch `13_jee8_deploy_to_docker_01_simple` in both repositories.
 
 === Running the main application in Docker
 
-Leave the `13_deploy_to_docker_01_simple` branch checked out.
+Leave the `13_jee8_deploy_to_docker_01_simple` branch checked out.
 
 Rebuild the cargo-tracker main application with `mvn install`.
 
-Run the application inside Docker with the following command, with PATH_TO_THE_GITHUB_REPO substituted by the path to parent folder of the cargo-tracker project:
+Run the application inside Docker with the following command, with `ABSOLUTE_PATH_TO_THE_GITHUB_REPO` substituted by the path to parent folder of the cargo-tracker project:
 
 ```
-docker run -p 8080:8080 -v 'PATH_TO_THE_GITHUB_REPO/cargo-tracker/target/autodeploy':/opt/payara/deployments payara/server-full
+docker run -p 8080:8080 -v 'ABSOLUTE_PATH_TO_THE_GITHUB_REPO/cargo-tracker/target/autodeploy':/opt/payara/deployments payara/server-full
 ```
+
+On Linux, you can also use the following command when in the github repository directory:
+
+```
+docker run -p 8080:8080 -p 4848:4848 -v "`pwd`"/cargo-tracker/target/autodeploy:/opt/payara/deployments payara/server-full
+```
+
 
 Test that the application is running at the URL: http://localhost:8080/cargo-tracker/[localhost:8080/cargo-tracker]
 
@@ -24,11 +31,23 @@ If the application isn't running, try building the application again to deploy i
 
 === Running the Pathfinder service in Docker
 
-Run the application inside Docker with the following command, with PATH_TO_THE_GITHUB_REPO substituted by the path to parent folder of the pathfinder project (Note: It's not necessary to map the HTTP port because the application doesn't use it):
+Run the application inside Docker with the following command, with:
+
+* `ABSOLUTE_PATH_TO_THE_GITHUB_REPO` substituted by the path to parent folder of the pathfinder project
+* `payaradashost` substituted for the internal IP address of Payara Server running in Docker (very often something like 172.17.0.2). You can see find it in the Payara Server log just under the text "Payara Data Grid State"
+
 
 ```
-docker run -v 'PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/payara/deployments payara/micro --deploy /opt/payara/deployments/pathfinder.war --clustermode domain:172.17.0.2:4900
+docker run -v 'ABSOLUTE_PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/payara/deployments payara/micro --deploy /opt/payara/deployments/pathfinder.war --clustermode domain:payaradashost:4900
 ```
+
+Alternatively on Linux:
+
+```
+docker run -v "`pwd`"/pathfinder/target:/opt/payara/deployments payara/micro --deploy /opt/payara/deployments/pathfinder.war --clustermode domain:payaradashost:4900
+```
+
+NOTE: It's not necessary to map the HTTP port because the application doesn't use it)
 
 Test that the service is running and exposes a REST resource at the URL: http://localhost:8081/pathfinder/rest/graph-traversal/shortest-path?origin=CNHKG&destination=AUMEL
 
@@ -46,3 +65,53 @@ Run additional services with the same docker command:
 ```
 docker run -v 'PATH_TO_THE_GITHUB_REPO/pathfinder/target':/opt/payara/deployments payara/micro --deploy /opt/payara/deployments/pathfinder.war --clustermode domain:172.17.0.2:4900
 ```
+
+=== Running whole application with docker-compose
+
+
+We'll build docker images that contain the applications and run them automatically when started. Then we can automated starting of all components of our system using docker-compose and a simple configuration file.
+
+==== Building self-contained docker images
+
+We can manually build docker images based on stock payara/server-full and payara/micro images: 
+
+* create a Dockerfile based on the stock images
+* add COPY instruction to copy the WAR file to a proper destination according to the documentation
+* run `docker build` to build a final image
+
+We can also do this from maven, e.g. using the jib plugin. This plugin allows building a docker image in our local registry with the goal `dockerBuild`. There's no need to create a Dockerfile because the jib plugin can be configured directly from maven, including copying WAR file and providing a custom `ENTRYPOINT` and `CMD`.
+
+It's also useful to specify the following Hazelcast properties in order for all services to create a cluster as soon as possible:
+
+* `hazelcast.merge.first.run.delay.seconds=5`
+* `-Dhazelcast.merge.next.run.delay.seconds=5`
+
+You can preview a working example in the branch `13_deploy_to_docker_01_simple`
+
+If finished, the command `mvn install` will build an application and also build appropriate docker images (cargo-tracker/monolith and cargo-tracker/pathfinder).
+
+==== Running the system with docker-compose
+
+`docker-compose` tool can start multiple containers at once and also wire them together according to the configuration in `docker-compose.yml` file.
+
+We need to specify 2 services based on our self-contained images we built earlier: **monolith** and **pathfinder**. They need to be deployed in the same network. Note that the name of a service also creates a hostname pointing to the service's IP. The pathfinder container should be looking for the monolith service under the `monolith` hostname. Using an IP or `localhost` wouldn't work as it used to before because the network is isolated.
+
+An example working configuration is in the branch `13_deploy_to_docker_01_simple` in the file `docker-compose/docker-compose.yml`.
+
+To try out, go to the directory `docker-compose` and run:
+
+```
+docker-compose up
+```
+
+NOTE: You may need to install `docker-compose` first
+
+You'll see both monolith and pathfinder starting at the same time. You can access the application as before, on URL http://localhost:8080/cargo-tracker.
+
+With `docker-compose`, it's also possible to scale service. Stop `docker-compose` and run the following:
+
+```
+docker-compose up --scale pathfinder=3
+```
+
+This will start 3 instances of pathfinder. The messages from the monolith will load balance between them. When you access the route page, you'll see in the docker-compose log that only one of the pathfinder services computes the data, the others ignore the message.
